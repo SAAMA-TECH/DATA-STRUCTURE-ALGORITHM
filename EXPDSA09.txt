@@ -1,0 +1,154 @@
+/* NAME: SAYYED AFFAN AHMED
+UIN: 251P088
+ROLL NO/DIV:13/D
+BRANCH: COMPUTER */
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+Node* last = NULL;  // Points to last node
+
+// Create a new node
+Node* createNode(int data) {
+    Node* temp = (Node*)malloc(sizeof(Node));
+    temp->data = data;
+    temp->next = NULL;
+    return temp;
+}
+
+// Insert into empty list
+void insertEmpty(int data) {
+    if (last != NULL) {
+        printf("List is not empty\n");
+        return;
+    }
+    Node* temp = createNode(data);
+    last = temp;
+    last->next = last;
+}
+
+// Insert at beginning
+void insertBegin(int data) {
+    if (last == NULL) {
+        insertEmpty(data);
+        return;
+    }
+    Node* temp = createNode(data);
+    temp->next = last->next;
+    last->next = temp;
+}
+
+// Insert at end
+void insertEnd(int data) {
+    if (last == NULL) {
+        insertEmpty(data);
+        return;
+    }
+    Node* temp = createNode(data);
+    temp->next = last->next;
+    last->next = temp;
+    last = temp;
+}
+
+// Delete a node
+void deleteNode(int key) {
+    if (last == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    Node *curr = last->next, *prev = last;
+
+    // Single node case
+    if (curr == last && curr->data == key) {
+        free(curr);
+        last = NULL;
+        return;
+    }
+
+    // If first node is to be deleted
+    if (curr->data == key) {
+        last->next = curr->next;
+        free(curr);
+        return;
+    }
+
+    // Traverse list
+    while (curr != last) {
+        if (curr->data == key) {
+            prev->next = curr->next;
+            free(curr);
+            return;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+
+    // If last node is to be deleted
+    if (curr->data == key) {
+        prev->next = curr->next;
+        last = prev;
+        free(curr);
+        return;
+    }
+
+    printf("Element not found\n");
+}
+
+// Display list
+void display() {
+    if (last == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    Node* temp = last->next;
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while (temp != last->next);
+    printf("(back to start)\n");
+}
+
+// Search element
+void search(int key) {
+    if (last == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+
+    Node* temp = last->next;
+    do {
+        if (temp->data == key) {
+            printf("Element %d found\n", key);
+            return;
+        }
+        temp = temp->next;
+    } while (temp != last->next);
+
+    printf("Element not found\n");
+}
+
+// Main function
+int main() {
+    insertEmpty(10);
+    insertBegin(5);
+    insertEnd(20);
+    insertEnd(30);
+
+    printf("List: ");
+    display();
+
+    search(20);
+
+    deleteNode(10);
+    printf("After deletion: ");
+    display();
+
+    return 0;
+}
